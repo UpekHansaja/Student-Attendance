@@ -1,0 +1,42 @@
+[
+  {
+    "nic": "200012345678",
+    "fullName": "John Smith",
+    "profilePicture": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+  },
+  {
+    "nic": "200098765432",
+    "fullName": "Sarah Johnson",
+    "profilePicture": "https://web.javainstitute.org/web-portal/ChangeStudentProfilePicture?getfile=1694682946948-IMG_9881%20copy.jpg"
+  },
+  {
+    "nic": "200055555555",
+    "fullName": "Michael Brown",
+    "profilePicture": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+  },
+  {
+    "nic": "200077777777",
+    "fullName": "Emily Davis",
+    "profilePicture": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
+  },
+  {
+    "nic": "200099999999",
+    "fullName": "David Wilson",
+    "profilePicture": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face"
+  },
+  {
+    "nic": "200434001381",
+    "fullName": "Upek Hansaja",
+    "profilePicture": "https://avatars.githubusercontent.com/u/109482062?v=4"
+  },
+  {
+    "nic": "200678901234",
+    "fullName": "Theekshana Pinsarani Silva",
+    "profilePicture": "https://avatars.githubusercontent.com/u/226446727?v=4"
+  },
+  {
+    "nic": "200789012345",
+    "fullName": "Madusha Gihan",
+    "profilePicture": "https://avatars.githubusercontent.com/u/222177917?v=4"
+  }
+]
