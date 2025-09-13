@@ -1,9 +1,28 @@
-// Data management utilities for local storage
+// Data management utilities for local storage and file sync
 import studentsData from '../data/students.json';
+import attendanceData from '../data/attendance.json';
 
 const STORAGE_KEYS = {
   ATTENDANCE: 'student_attendance_data',
   ADMIN_AUTH: 'admin_auth_token'
+};
+
+// Function to update the attendance.json file in the project
+const updateAttendanceJsonFile = (data) => {
+  try {
+    // Store the data in a special localStorage key for the JSON file
+    localStorage.setItem('attendance_json_backup', JSON.stringify(data, null, 2));
+    
+    // Log the data for easy copying to the actual file
+    console.log('=== ATTENDANCE DATA FOR attendance.json ===');
+    console.log(JSON.stringify(data, null, 2));
+    console.log('=== COPY THE ABOVE DATA TO attendance.json ===');
+    
+    return true;
+  } catch (error) {
+    console.error('Error updating attendance JSON:', error);
+    return false;
+  }
 };
 
 // Get attendance data from localStorage
@@ -17,10 +36,15 @@ export const getAttendanceData = () => {
   }
 };
 
-// Save attendance data to localStorage
+// Save attendance data to localStorage and update JSON backup
 export const saveAttendanceData = (data) => {
   try {
+    // Save to localStorage
     localStorage.setItem(STORAGE_KEYS.ATTENDANCE, JSON.stringify(data));
+    
+    // Update JSON file backup (no downloads!)
+    updateAttendanceJsonFile(data);
+    
     return true;
   } catch (error) {
     console.error('Error saving attendance data:', error);
@@ -186,4 +210,59 @@ export const formatDate = (dateString) => {
 export const formatTime = (timeString) => {
   if (!timeString) return '-';
   return timeString;
+};
+
+// Export attendance data to JSON file (manual export)
+export const exportAttendanceData = () => {
+  const data = getAttendanceData();
+  
+  // Show the data in console for easy copying
+  console.log('=== EXPORT ATTENDANCE DATA ===');
+  console.log('Copy the following data to attendance.json:');
+  console.log(JSON.stringify(data, null, 2));
+  console.log('=== END EXPORT ===');
+  
+  // Also store in localStorage for backup
+  localStorage.setItem('attendance_json_backup', JSON.stringify(data, null, 2));
+  
+  return true;
+};
+
+// Get attendance data as JSON string for copying to file
+export const getAttendanceDataAsJson = () => {
+  const data = getAttendanceData();
+  return JSON.stringify(data, null, 2);
+};
+
+// Load attendance data from JSON file (for importing)
+export const loadAttendanceFromFile = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        
+        // Validate data structure
+        if (Array.isArray(data)) {
+          // Save to localStorage
+          if (saveAttendanceData(data)) {
+            resolve(data);
+          } else {
+            reject(new Error('Failed to save imported data'));
+          }
+        } else {
+          reject(new Error('Invalid data format'));
+        }
+      } catch (error) {
+        reject(new Error('Invalid JSON file'));
+      }
+    };
+    
+    reader.onerror = () => {
+      reject(new Error('Failed to read file'));
+    };
+    
+    reader.readAsText(file);
+  });
 };

@@ -5,7 +5,9 @@ import {
   getStudentByNIC, 
   formatDate, 
   formatTime,
-  logoutAdmin 
+  logoutAdmin,
+  exportAttendanceData,
+  getAttendanceDataAsJson 
 } from '../utils/dataManager';
 
 const AdminDashboard = ({ onLogout }) => {
@@ -45,6 +47,18 @@ const AdminDashboard = ({ onLogout }) => {
   const handleLogout = () => {
     logoutAdmin();
     onLogout();
+  };
+
+  const handleExportData = () => {
+    const jsonData = getAttendanceDataAsJson();
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(jsonData).then(() => {
+      alert('Attendance data copied to clipboard! Paste it into attendance.json file.');
+    }).catch(() => {
+      // Fallback: show in alert
+      alert(`Attendance data:\n\n${jsonData}\n\nCopy this data to attendance.json file.`);
+    });
   };
 
   const renderTodayTab = () => (
@@ -207,12 +221,21 @@ const AdminDashboard = ({ onLogout }) => {
                 Java Institute - Gampaha | {currentTime.toLocaleDateString()} {currentTime.toLocaleTimeString()}
               </p>
             </div>
-            <button
-              onClick={handleLogout}
-              className="btn-secondary"
-            >
-              Logout
-            </button>
+            <div className="flex space-x-2">
+              <button
+                onClick={handleExportData}
+                className="btn-secondary text-sm"
+                title="Export attendance data to JSON file"
+              >
+                📥 Export
+              </button>
+              <button
+                onClick={handleLogout}
+                className="btn-secondary"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </div>
