@@ -55,6 +55,18 @@ const AttendanceInterface = ({ onNavigateToAdmin }) => {
     }
   };
 
+  // Handle Enter key press
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && student && attendanceStatus && !isLoading) {
+      // Determine which action to take based on current status
+      if (attendanceStatus.canMarkIn) {
+        handleMarkAttendance('in');
+      } else if (attendanceStatus.canMarkOut) {
+        handleMarkAttendance('out');
+      }
+    }
+  };
+
   // Handle attendance marking
   const handleMarkAttendance = async (type) => {
     if (!student || !attendanceStatus) return;
@@ -143,12 +155,18 @@ const AttendanceInterface = ({ onNavigateToAdmin }) => {
               <div>
                 <label className="block text-sm font-medium text-secondary-700 mb-2">
                   Enter Student NIC Number
+                  {student && attendanceStatus && (attendanceStatus.canMarkIn || attendanceStatus.canMarkOut) && (
+                    <span className="ml-2 text-xs text-primary-600 font-normal">
+                      (Press Enter to mark attendance)
+                    </span>
+                  )}
                 </label>
                 <input
                   ref={nicInputRef}
                   type="text"
                   value={nic}
                   onChange={handleNICChange}
+                  onKeyPress={handleKeyPress}
                   placeholder="Enter 12-digit NIC number"
                   maxLength={12}
                   className="input-field text-center text-lg tracking-wider"
@@ -216,8 +234,9 @@ const AttendanceInterface = ({ onNavigateToAdmin }) => {
                       onClick={() => handleMarkAttendance('in')}
                       disabled={isLoading}
                       className="btn-primary bg-green-600 hover:bg-green-700 disabled:opacity-50 w-full text-lg py-4"
+                      title="Click or press Enter to mark IN"
                     >
-                      {isLoading ? 'Processing...' : '🎯 Mark IN'}
+                      {isLoading ? 'Processing...' : '🎯 Mark IN (Enter)'}
                     </button>
                   )}
                   
@@ -226,8 +245,9 @@ const AttendanceInterface = ({ onNavigateToAdmin }) => {
                       onClick={() => handleMarkAttendance('out')}
                       disabled={isLoading}
                       className="btn-primary bg-red-600 hover:bg-red-700 disabled:opacity-50 w-full text-lg py-4"
+                      title="Click or press Enter to mark OUT"
                     >
-                      {isLoading ? 'Processing...' : '🚪 Mark OUT'}
+                      {isLoading ? 'Processing...' : '🚪 Mark OUT (Enter)'}
                     </button>
                   )}
                   

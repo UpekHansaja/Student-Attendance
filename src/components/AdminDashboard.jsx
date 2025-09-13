@@ -9,6 +9,8 @@ import {
   exportAttendanceData,
   getAttendanceDataAsJson 
 } from '../utils/dataManager';
+import { exportTodaysAttendancePDF, exportAllAttendancePDF } from '../utils/pdfExporter';
+import studentsData from '../data/students.json';
 
 const AdminDashboard = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('today');
@@ -59,6 +61,29 @@ const AdminDashboard = ({ onLogout }) => {
       // Fallback: show in alert
       alert(`Attendance data:\n\n${jsonData}\n\nCopy this data to attendance.json file.`);
     });
+  };
+
+  const handleExportPDF = () => {
+    try {
+      let success = false;
+      
+      if (activeTab === 'today') {
+        console.log('Exporting today\'s attendance to PDF...', todaysRecords);
+        success = exportTodaysAttendancePDF(todaysRecords, studentsData);
+      } else {
+        console.log('Exporting all attendance to PDF...', allRecords);
+        success = exportAllAttendancePDF(allRecords, studentsData);
+      }
+      
+      if (success) {
+        alert('PDF exported successfully! Check your downloads folder.');
+      } else {
+        alert('Failed to export PDF. Please check the console for errors.');
+      }
+    } catch (error) {
+      console.error('Error in handleExportPDF:', error);
+      alert('An error occurred while exporting PDF. Please check the console for details.');
+    }
   };
 
   const renderTodayTab = () => (
@@ -223,11 +248,18 @@ const AdminDashboard = ({ onLogout }) => {
             </div>
             <div className="flex space-x-2">
               <button
+                onClick={handleExportPDF}
+                className="btn-secondary text-sm bg-red-100 hover:bg-red-200 text-red-700"
+                title="Export attendance data to PDF"
+              >
+                📄 PDF
+              </button>
+              <button
                 onClick={handleExportData}
                 className="btn-secondary text-sm"
                 title="Export attendance data to JSON file"
               >
-                📥 Export
+                📥 JSON
               </button>
               <button
                 onClick={handleLogout}
