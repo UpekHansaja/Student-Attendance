@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { getStudentByNIC, markAttendance, getTodaysAttendance, getTodaysAttendanceStatus } from '../utils/dataManager';
+import { playAttendanceSuccessSound, initializeAudio } from '../utils/audioManager';
 
 const AttendanceInterface = ({ onNavigateToAdmin }) => {
   const [nic, setNic] = useState('');
@@ -16,6 +17,9 @@ const AttendanceInterface = ({ onNavigateToAdmin }) => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
+
+    // Initialize audio
+    initializeAudio();
 
     return () => {
       clearInterval(timer);
@@ -78,6 +82,9 @@ const AttendanceInterface = ({ onNavigateToAdmin }) => {
       
       if (success) {
         setMessage(`${student.fullName} marked ${type.toUpperCase()} successfully!`);
+        
+        // Play success sound effect
+        playAttendanceSuccessSound();
         
         // Update attendance status
         const updatedStatus = getTodaysAttendanceStatus(student.nic);
@@ -272,6 +279,9 @@ const AttendanceInterface = ({ onNavigateToAdmin }) => {
                     ? 'bg-green-100 text-green-800 border border-green-200' 
                     : 'bg-red-100 text-red-800 border border-red-200'
                 }`}>
+                  {message.includes('successfully') && (
+                    <span className="mr-2">🔊</span>
+                  )}
                   {message}
                 </div>
               )}
